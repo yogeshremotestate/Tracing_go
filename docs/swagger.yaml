@@ -1,0 +1,219 @@
+definitions:
+  models.Note:
+    properties:
+      body:
+        type: string
+      createdAt:
+        type: string
+      deletedAt:
+        description: Optional for soft delete, if needed
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+      updatedAt:
+        type: string
+      userID:
+        type: integer
+    type: object
+  models.NoteBody:
+    properties:
+      body:
+        type: string
+      title:
+        type: string
+    type: object
+  models.UserBody:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: Testing Swagger APIs.
+  termsOfService: http://google.com/
+  title: TODO APIs
+  version: "1.0"
+paths:
+  /notes:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all notes for the logged-in user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of Notes
+          schema:
+            items:
+              $ref: '#/definitions/models.Note'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Get All Notes
+      tags:
+      - notes
+    post:
+      consumes:
+      - application/json
+      description: Create a new note for the logged-in user
+      parameters:
+      - description: Create Note
+        in: body
+        name: note
+        required: true
+        schema:
+          $ref: '#/definitions/models.NoteBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+      security:
+      - BearerAuth: []
+      summary: Create Note
+      tags:
+      - notes
+  /notes/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a specific note by its ID
+      parameters:
+      - description: Note ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+      security:
+      - BearerAuth: []
+      summary: Delete Note
+      tags:
+      - notes
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a specific note by its ID
+      parameters:
+      - description: Note ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Retrieved Note
+          schema:
+            $ref: '#/definitions/models.Note'
+      security:
+      - BearerAuth: []
+      summary: Get Note
+      tags:
+      - notes
+    put:
+      consumes:
+      - application/json
+      description: Update an existing note by its ID
+      parameters:
+      - description: Note ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update Note
+        in: body
+        name: note
+        required: true
+        schema:
+          $ref: '#/definitions/models.NoteBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+      security:
+      - BearerAuth: []
+      summary: Update Note
+      tags:
+      - notes
+  /notes/upload:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Allows a logged-in user to upload an Excel file
+      parameters:
+      - description: Excel file to upload
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+      security:
+      - BearerAuth: []
+      summary: Upload Excel File
+      tags:
+      - file
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate a user and return a token
+      parameters:
+      - description: Login Credentials
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+      summary: LoginUser
+      tags:
+      - user
+  /user/signup:
+    post:
+      consumes:
+      - application/json
+      description: Register User new account
+      parameters:
+      - description: Signup Credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+      summary: SignUpUser
+      tags:
+      - user
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
